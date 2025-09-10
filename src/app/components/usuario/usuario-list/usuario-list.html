@@ -1,0 +1,51 @@
+<div class="usuario-list">
+  <div class="header">
+    <h2><i class="fas fa-users"></i> Lista de Usuários</h2>
+    <button class="btn-primary" (click)="onNovoUsuario()">
+      <i class="fas fa-plus"></i> Novo Usuário
+    </button>
+  </div>
+
+  @if (usuarios.length === 0) {
+    <div class="empty-state">
+      <i class="fas fa-user-slash"></i>
+      <p>Nenhum usuário cadastrado</p>
+    </div>
+  }
+
+  @if (usuarios.length > 0) {
+    <div class="table-container">
+      <table class="usuario-table">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Idade</th>
+          <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+          @for (usuario of usuarios; track usuario.id) {
+            <tr>
+              <td>{{ usuario.id }}</td>
+              <td>{{ usuario.nome }}</td>
+              <td>{{ usuario.email }}</td>
+              <td>{{ usuario.idade }}</td>
+              <td>
+                <div class="actions">
+                  <button class="btn-edit" (click)="onEditar(usuario)">
+                    <i class="fas fa-edit"></i> Editar
+                  </button>
+                  <button class="btn-delete" (click)="onExcluir(usuario.id)">
+                    <i class="fas fa-trash"></i> Excluir
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

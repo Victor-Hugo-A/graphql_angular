@@ -1,0 +1,78 @@
+<div class="usuario-form">
+  <h2>
+    <i class="fas" [class.fa-user-edit]="isEditMode" [class.fa-user-plus]="!isEditMode"></i>
+    {{ isEditMode ? 'Editar Usuário' : 'Novo Usuário' }}
+  </h2>
+
+  <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="nome">Nome</label>
+      <input
+        type="text"
+        id="nome"
+        formControlName="nome"
+        [class.error]="nome?.invalid && nome?.touched"
+        placeholder="Digite o nome completo">
+      @if (nome?.invalid && nome?.touched) {
+        <div class="error-message">
+          @if (nome?.errors?.['required']) {
+            <span>Nome é obrigatório</span>
+          }
+          @if (nome?.errors?.['minlength']) {
+            <span>Nome deve ter pelo menos 3 caracteres</span>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        formControlName="email"
+        [class.error]="email?.invalid && email?.touched"
+        placeholder="Digite o email">
+      @if (email?.invalid && email?.touched) {
+        <div class="error-message">
+          @if (email?.errors?.['required']) {
+            <span>Email é obrigatório</span>
+          }
+          @if (email?.errors?.['email']) {
+            <span>Digite um email válido</span>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="idade">Idade</label>
+      <input
+        type="number"
+        id="idade"
+        formControlName="idade"
+        [class.error]="idade?.invalid && idade?.touched"
+        placeholder="Digite a idade"
+        min="1" max="120">
+      @if (idade?.invalid && idade?.touched) {
+        <div class="error-message">
+          @if (idade?.errors?.['required']) {
+            <span>Idade é obrigatória</span>
+          }
+          @if (idade?.errors?.['min'] || idade?.errors?.['max']) {
+            <span>Idade deve estar entre 1 e 120 anos</span>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" (click)="onCancel()">
+        <i class="fas fa-times"></i> Cancelar
+      </button>
+      <button type="submit" class="btn-submit" [disabled]="usuarioForm.invalid">
+        <i class="fas fa-save"></i> {{ isEditMode ? 'Atualizar' : 'Criar' }}
+      </button>
+    </div>
+  </form>
+</div>
