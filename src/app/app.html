@@ -6,7 +6,8 @@
 
   <main class="app-main">
     <div class="content-wrapper">
-      <!-- Exibe o formulário quando está em modo de edição/criação -->
+      @let usuarios = (usuarios$ | async) ?? [];
+
       @if (showForm) {
         <app-usuario-form
           [usuario]="selectedUsuario"
@@ -14,10 +15,7 @@
           (submitForm)="onSubmitForm($event)"
           (cancel)="onCancelForm()">
         </app-usuario-form>
-      }
-
-      <!-- Exibe a lista quando não está no formulário -->
-      @if (!showForm) {
+      } @else {
         <app-usuario-list
           [usuarios]="usuarios"
           (edit)="onEditUsuario($event)"
@@ -32,12 +30,13 @@
     <p>&copy; 2024 Sistema de Gerenciamento de Usuários. Todos os direitos reservados.</p>
   </footer>
 
-  <!-- Notification Toast -->
   @if (notification.show) {
     <div class="notification-toast">
-      <div class="notification-content" [class.success]="notification.type === 'success'"
+      <div class="notification-content"
+           [class.success]="notification.type === 'success'"
            [class.error]="notification.type === 'error'">
-        <i class="fas" [class.fa-check-circle]="notification.type === 'success'"
+        <i class="fas"
+           [class.fa-check-circle]="notification.type === 'success'"
            [class.fa-exclamation-circle]="notification.type === 'error'"></i>
         <span>{{ notification.message }}</span>
       </div>

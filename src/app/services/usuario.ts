@@ -1,7 +1,7 @@
 // src/app/services/usuario.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, throwError, tap } from 'rxjs';
+import { Observable, catchError, throwError, tap, BehaviorSubject , map} from 'rxjs';
 import { environment } from '../../assets/environments/environment';
 import { Usuario } from '../models/usuario.model';
 import { GraphQLResponse } from '../types/graphql.types';
@@ -18,8 +18,40 @@ export class UsuarioService {
     private errorHandler: ErrorHandlerService,
   ) { }
 
+  private usuariosSubject = new BehaviorSubject<Usuario[]>([]);
+  usuarios$ = this.usuariosSubject.asObservable();
+
+  refreshUsuarios() {
+    this.getUsuarios().subscribe({
+      next: (resp) => {
+        try {
+          const lista = this.extractDataOrThrow<Usuario[]>(resp, 'todosUsuarios');
+          this.usuariosSubject.next(lista);
+        } catch (e) {
+          this.usuariosSubject.next([]);
+        }
+      },
+      error: () => this.usuariosSubject.next([]),
+    });
+  }
+
+  // Conveniências após mutações
+  pushLocal(u: Usuario) {
+    this.usuariosSubject.next([...this.usuariosSubject.value, u]);
+  }
+  replaceLocal(u: Usuario) {
+    this.usuariosSubject.next(
+      this.usuariosSubject.value.map(x => x.id === u.id ? u : x)
+    );
+  }
+  removeLocal(id: number) {
+    this.usuariosSubject.next(
+      this.usuariosSubject.value.filter(x => x.id !== id)
+    );
+  }
+
+
   private executeQuery(query: string, variables?: any): Observable<any> {
-    console.log('Enviando para GraphQL:', { query, variables });
 
     return this.http.post<GraphQLResponse>(this.apiUrl, {
       query,

@@ -1,45 +1,31 @@
-import {Component, OnInit, Output, EventEmitter, Input} from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Usuario } from '../../../models/usuario.model';
-import { UsuarioService } from '../../../services/usuario';
-import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-usuario-list',
   standalone: true,
-  imports: [
-    CommonModule
-  ],
   templateUrl: './usuario-list.html',
-  styleUrls: ['./usuario-list.scss']
+  styleUrls: ['./usuario-list.scss'],
+  imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsuarioListComponent implements OnInit {
-  @Input() usuarios: Usuario[] = [];
+  @Input() usuarios: Usuario[] = []; // recebe do pai (AppComponent)
   @Output() edit = new EventEmitter<Usuario>();
   @Output() delete = new EventEmitter<number>();
   @Output() newUser = new EventEmitter<void>();
 
-  constructor(private usuarioService: UsuarioService) {}
-
   ngOnInit(): void {
-    this.carregarUsuarios();
-  }
-
-  carregarUsuarios(): void {
-    this.usuarioService.getUsuarios().subscribe({
-      next: (usuarios) => {
-        this.usuarios = usuarios;
-      },
-      error: (error) => {
-        console.error('Erro ao carregar usuários:', error);
-      }
-    });
+    // Nenhum fetch aqui — lista 100% apresentacional
   }
 
   onEditar(usuario: Usuario): void {
     this.edit.emit(usuario);
   }
 
-  onExcluir(usuarioId: number | undefined): void {
+  onExcluir(usuarioId?: number): void {
+    if (usuarioId == null) return; // evita undefined
     if (confirm('Tem certeza que deseja excluir este usuário?')) {
       this.delete.emit(usuarioId);
     }
@@ -47,5 +33,9 @@ export class UsuarioListComponent implements OnInit {
 
   onNovoUsuario(): void {
     this.newUser.emit();
+  }
+
+  trackById(_i: number, u: Usuario) {
+    return u.id ?? _i;
   }
 }
