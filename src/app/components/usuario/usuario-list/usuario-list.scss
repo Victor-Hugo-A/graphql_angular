@@ -194,7 +194,7 @@ $shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.08);
    Modo escuro (opcional)
    ======================= */
 @media (prefers-color-scheme: dark) {
-  .table-card { background: #8992a5; border-color: rgba(255,255,255,.10); }
+  .table-card { background: #8992a5; }
   .users-table thead th { background: #2c3e50; color: #e5e7eb; border-bottom-color: rgba(255,255,255,.10); }
   .users-table td { color: $text-strong; border-bottom-color: rgba(255,255,255,.08); }
   .users-table tbody tr:nth-child(even) { background: rgba(255,255,255,.02); }

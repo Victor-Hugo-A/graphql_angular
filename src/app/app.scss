@@ -1,27 +1,90 @@
-.app-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+// Variáveis para cores, breakpoints e espaçamentos
+$colors: (
+  primary: (
+    gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%),
+    header-gradient: linear-gradient(90deg, #4b6cb7 0%, #182848 100%),
+    footer: #2c3e50
+  ),
+  status: (
+    success: #28a745,
+    error: #dc3545
+  ),
+  text: (
+    light: #ffffff,
+    muted: rgba(255, 255, 255, 0.9)
+  )
+);
+
+$breakpoints: (
+  tablet: 768px,
+  mobile: 480px
+);
+
+$spacing: (
+  sm: 1rem,
+  md: 2rem,
+  lg: 2.5rem
+);
+
+$shadow: (
+  header: 0 4px 12px rgba(0, 0, 0, 0.1),
+  content: 0 10px 30px rgba(0, 0, 0, 0.1),
+  notification: 0 10px 30px rgba(0, 0, 0, 0.25)
+);
+
+$border-radius: (
+  sm: 8px,
+  md: 12px
+);
+
+// Mixins para responsividade
+@mixin respond-to($breakpoint) {
+  @media (max-width: map-get($breakpoints, $breakpoint)) {
+    @content;
+  }
 }
 
+// Mixin para flexbox
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Estilos base
+.app-container {
+  min-height: 100vh;
+  @include flex-column;
+  background: map-get($colors, primary, gradient);
+}
+
+// Header
 .app-header {
-  background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
-  color: white;
-  padding: 2rem;
+  background: map-get($colors, primary, header-gradient);
+  color: map-get($colors, text, light);
+  padding: map-get($spacing, md);
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: map-get($shadow, header);
 
   h1 {
     margin: 0 0 0.5rem 0;
     font-size: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
+    @include flex-center;
+    gap: map-get($spacing, sm);
 
-    @media (max-width: 768px) {
+    @include respond-to(tablet) {
       font-size: 2rem;
+    }
+
+    @include respond-to(mobile) {
+      font-size: 1.75rem;
+      flex-direction: column;
+      gap: 0.5rem;
     }
   }
 
@@ -29,33 +92,40 @@
     margin: 0;
     font-size: 1.2rem;
     opacity: 0.9;
+
+    @include respond-to(tablet) {
+      font-size: 1.1rem;
+    }
   }
 }
 
+// Main content
 .app-main {
   flex: 1;
-  padding: 2rem;
+  padding: map-get($spacing, md);
   display: flex;
   justify-content: center;
 
-  @media (max-width: 768px) {
-    padding: 1rem;
+  @include respond-to(tablet) {
+    padding: map-get($spacing, sm);
   }
 }
 
 .content-wrapper {
   width: 100%;
   max-width: 1200px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: map-get($border-radius, md);
+  box-shadow: map-get($shadow, content);
   overflow: hidden;
+  background: white; // Adicionado para melhor contraste
 }
 
+// Footer
 .app-footer {
-  background: #2c3e50;
-  color: white;
+  background: map-get($colors, primary, footer);
+  color: map-get($colors, text, light);
   text-align: center;
-  padding: 1rem;
+  padding: map-get($spacing, sm);
   margin-top: auto;
 
   p {
@@ -65,40 +135,48 @@
   }
 }
 
+// Notification system
 .notification-toast {
   position: fixed;
   top: 20px;
   right: 20px;
   z-index: 9999;
-  /* sem transform/opacity aqui */
+  animation: slideInRight 0.3s ease;
+
+  @include respond-to(tablet) {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+  }
 }
 
 .notification-content {
   padding: 1rem 1.5rem;
-  border-radius: 8px;
-  color: #fff;
+  border-radius: map-get($border-radius, sm);
+  color: map-get($colors, text, light);
   display: inline-flex;
   align-items: center;
-  gap: .5rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  gap: 0.5rem;
+  box-shadow: map-get($shadow, notification);
   max-width: min(90vw, 520px);
   white-space: normal;
   word-break: break-word;
-}
-.notification-content.success { background: #28a745; }
-.notification-content.error   { background: #dc3545; }
 
-  i { font-size: 1.2rem; }
+  &.success {
+    background: map-get($colors, status, success);
+  }
 
+  &.error {
+    background: map-get($colors, status, error);
+  }
 
-// Animações de transição
-:host ::ng-deep {
-  app-usuario-list, app-usuario-form {
-    display: block;
-    animation: fadeIn 0.3s ease;
+  i {
+    font-size: 1.2rem;
+    min-width: 1.2rem; // Previne flickering
   }
 }
 
+// Animações
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -108,4 +186,40 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Component styles
+:host ::ng-deep {
+  app-usuario-list,
+  app-usuario-form {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+}
+
+// Estados de acessibilidade
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// Focus states para acessibilidade
+.app-header h1:focus,
+.notification-content:focus {
+  outline: 2px solid map-get($colors, status, success);
+  outline-offset: 2px;
 }
