@@ -26,9 +26,7 @@ export class UsuarioListComponent implements OnInit {
 
   onExcluir(usuarioId?: number): void {
     if (usuarioId == null) return; // evita undefined
-    if (confirm('Tem certeza que deseja excluir este usuário?')) {
       this.delete.emit(usuarioId);
-    }
   }
 
   onNovoUsuario(): void {

@@ -31,7 +31,7 @@
   </footer>
 
   @if (notification.show) {
-    <div class="notification-toast">
+    <div class="notification-toast" role="status" aria-live="polite">
       <div class="notification-content"
            [class.success]="notification.type === 'success'"
            [class.error]="notification.type === 'error'">

@@ -1,292 +1,197 @@
-@use "sass:color";
+/* =======================
+   Paleta (compile-time)
+   ======================= */
+$brand-700: #1e293b;   // slate-800
+$brand-600: #334155;   // slate-700
+$brand-500: #2563eb;   // blue-600 (accento sutil)
+$text-strong: #0f172a; // slate-900
+$text-muted: #64748b;  // slate-500
+$surface: #ffffff;
+$surface-muted: #f8fafc;
+$border: #e5e7eb;
+$danger: #b42318;      // red-700
+$danger-hover: #9a2715;
+$shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.08);
 
-// Variáveis e mixins
-$primary-color: #4b6cb7;
-$secondary-color: #28a745;
-$edit-color: #17a2b8;
-$delete-color: #dc3545;
-$text-color: #2c3e50;
-$light-gray: #f8f9fa;
-$border-color: #e9ecef;
-$shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+/* utilitário para conteúdo apenas visual (caption) */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
 
-// Mixin para botões
-@mixin button-style($bg-color, $hover-color) {
-  background-color: $bg-color;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s ease;
+/* =======================
+   Cabeçalho da lista
+   ======================= */
+.list-header {
   display: flex;
   align-items: center;
-  gap: 5px;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: 1rem;
 
-  &:hover:not(:disabled) {
-    background-color: $hover-color;
-    transform: translateY(-1px);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-}
-
-// Mixin para flexbox
-@mixin flex-center($direction: row, $justify: center, $align: center) {
-  display: flex;
-  flex-direction: $direction;
-  justify-content: $justify;
-  align-items: $align;
-}
-
-.usuario-list {
-  padding: 2rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
-  .header {
-    @include flex-center(row, space-between, center);
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid $border-color;
+  .title-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
 
     h2 {
-      color: $text-color;
-      font-size: 1.8rem;
       margin: 0;
-      @include flex-center(row, flex-start, center);
-      gap: 0.8rem;
-
-      i {
-        color: $primary-color;
-        font-size: 1.5rem;
-      }
+      color: $text-strong;
+      font-weight: 700;
+      letter-spacing: .2px;
     }
 
-    .btn-primary {
-      @include button-style($secondary-color, color.adjust($secondary-color, $lightness: -10%));
-      padding: 10px 20px;
-      font-size: 0.9rem;
-    }
-  }
-
-  .empty-state {
-    @include flex-center(column, center, center);
-    padding: 3rem;
-    background: $light-gray;
-    border-radius: 12px;
-    text-align: center;
-    color: #6c757d;
-
-    i {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      color: #adb5bd;
-    }
-
-    p {
-      font-size: 1.2rem;
-      margin: 0;
-      font-weight: 500;
+    .badge {
+      padding: .2rem .5rem;
+      font-size: .85rem;
+      color: $brand-600;
+      background: #eef2f7;
+      border: 1px solid #e6ebf2;
+      border-radius: 999px;
     }
   }
 
-  .table-container {
-    overflow-x: auto;
-    border-radius: 12px;
-    box-shadow: $shadow;
-    background: white;
+  .toolbar {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* =======================
+   Botões locais
+   ======================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: .55rem .9rem;
+  font-weight: 600;
+  background: $surface;
+  color: $text-strong;
+  box-shadow: $shadow;
+  transition: transform .06s ease, filter .2s ease, box-shadow .2s ease, border-color .2s ease;
+
+  i { font-size: .95rem; }
+
+  &:active { transform: translateY(1px); }
+  &:focus-visible {
+    outline: none;
+    border-color: rgba(37, 99, 235, .55); // azul
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .18), $shadow;
+  }
+}
+.btn-primary {
+  background: $brand-600;
+  color: #fff;
+  &:hover { filter: brightness(1.03); }
+  &:disabled { opacity: .6; cursor: not-allowed; box-shadow: none; }
+}
+.btn-ghost {
+  background: #eef2f7;
+  color: $text-strong;
+  &:hover { filter: brightness(.98); }
+}
+.btn-danger {
+  background: $danger;
+  color: #fff;
+  &:hover { background: $danger-hover; }
+}
+
+/* =======================
+   Cartão & Tabela
+   ======================= */
+/* Cartão do grid */
+.table-card {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: 12px;
+  box-shadow: $shadow;
+  /* antes: overflow: auto; */
+  overflow: hidden;              /* ✅ some a barra no desktop */
+}
+
+/* Tabela */
+.users-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0.5;
+  table-layout: fixed;           /* ✅ colunas estáveis, sem “empurrar” */
+
+  thead th,
+  td {
+    /* Mantém uma linha por célula e evita overflow horizontal */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .usuario-table {
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: .75rem .9rem;
+    text-align: left;
+    color: $text-strong;
+    background: #f3f4f6;
+    border-bottom: 1px solid $border;
+    font-weight: 700;
+
+    &.col-actions { text-align: right; }
+    &:first-child { border-top-left-radius: 12px; }
+    &:last-child  { border-top-right-radius: 12px; }
+  }
+
+  td {
+    color: $text-strong;
+    vertical-align: middle;
+    border-bottom: 1px solid $border;
+
+    /* Links não quebram layout; mostram tooltip completo via title */
+    a {
+      color: $brand-600;
+      text-decoration: none;
+      transition: color .15s ease;
+      &:hover { color: $brand-500; }
+    }
+  }
+
+  .actions {
+    display: inline-flex;
+    justify-content: flex-end;
+    gap: .5rem;
     width: 100%;
-    border-collapse: collapse;
-    min-width: 600px;
-
-    th {
-      background: linear-gradient(135deg, $primary-color 0%, color.adjust($primary-color, $lightness: -10%) 100%);
-      color: white;
-      padding: 1.2rem;
-      text-align: left;
-      font-weight: 600;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-
-      &:first-child {
-        border-top-left-radius: 12px;
-      }
-
-      &:last-child {
-        border-top-right-radius: 12px;
-      }
-    }
-
-    td {
-      padding: 1.2rem;
-      border-bottom: 1px solid $border-color;
-      color: $text-color;
-      font-size: 0.95rem;
-    }
-
-    tr {
-      transition: background-color 0.2s ease;
-
-      &:nth-child(even) {
-        background-color: color.adjust($light-gray, $lightness: 2%);
-      }
-
-      &:hover {
-        background-color: color.adjust($light-gray, $lightness: -2%);
-      }
-
-      &:last-child {
-        td:first-child {
-          border-bottom-left-radius: 12px;
-        }
-
-        td:last-child {
-          border-bottom-right-radius: 12px;
-        }
-      }
-    }
-
-    .actions {
-      @include flex-center(row, flex-start, center);
-      gap: 0.8rem;
-
-      .btn-edit {
-        @include button-style($edit-color, color.adjust($edit-color, $lightness: -10%));
-        font-size: 0.85rem;
-      }
-
-      .btn-delete {
-        @include button-style($delete-color, color.adjust($delete-color, $lightness: -10%));
-        font-size: 0.85rem;
-      }
-    }
-  }
-
-  // Responsividade
-  @media (max-width: 768px) {
-    padding: 1rem;
-
-    .header {
-      flex-direction: column;
-      gap: 1rem;
-      text-align: center;
-
-      h2 {
-        justify-content: center;
-      }
-    }
-
-    .usuario-table {
-      min-width: unset;
-
-      th, td {
-        padding: 0.8rem;
-        font-size: 0.85rem;
-      }
-
-      .actions {
-        flex-direction: column;
-        gap: 0.5rem;
-
-        button {
-          width: 100%;
-          justify-content: center;
-        }
-      }
-    }
-  }
-
-  @media (max-width: 480px) {
-    .header {
-      h2 {
-        font-size: 1.5rem;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-    }
-
-    .empty-state {
-      padding: 2rem;
-
-      i {
-        font-size: 2.5rem;
-      }
-
-      p {
-        font-size: 1.1rem;
-      }
-    }
-
-    .usuario-table {
-      th, td {
-        padding: 0.6rem;
-        font-size: 0.8rem;
-      }
-
-      th:nth-child(1),
-      td:nth-child(1) {
-        display: none;
-      }
-    }
   }
 }
 
-// Animações
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+/* Só no mobile (se a tabela ficar realmente maior que a tela) */
+@media (max-width: 768px) {
+  .table-card {
+    overflow-x: auto;    /* ✅ permite rolagem horizontal apenas no mobile */
+    -webkit-overflow-scrolling: touch;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+
+  /* Se preferir quebrar texto em mobile (e NÃO rolar), troque para: */
+  /* .users-table thead th, .users-table td { white-space: normal; } */
 }
 
-.usuario-list {
-  animation: fadeIn 0.3s ease;
-}
+/* =======================
+   Modo escuro (opcional)
+   ======================= */
+@media (prefers-color-scheme: dark) {
+  .table-card { background: #0f172a; border-color: rgba(255,255,255,.10); }
+  .users-table thead th { background: #111827; color: #e5e7eb; border-bottom-color: rgba(255,255,255,.10); }
+  .users-table td { color: #e5e7eb; border-bottom-color: rgba(255,255,255,.08); }
+  .users-table tbody tr:nth-child(even) { background: rgba(255,255,255,.02); }
+  .users-table tbody tr:hover { background: rgba(255,255,255,.04); }
 
-// Estados de loading (opcional)
-.loading {
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-// Efeitos de hover melhorados
-button {
-  transition: all 0.3s ease;
-
-  &:active {
-    transform: scale(0.98);
-  }
-}
-
-// Scroll personalizado para a tabela
-.table-container {
-  &::-webkit-scrollbar {
-    height: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: $light-gray;
-    border-radius: 3px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: $primary-color;
-    border-radius: 3px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: color.adjust($primary-color, $lightness: -10%);
-  }
+  .empty-state { background: #0b1220; border-color: rgba(255,255,255,.10); color: #cbd5e1; }
 }
