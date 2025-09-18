@@ -1,197 +1,243 @@
-/* =======================
-   Paleta (compile-time)
-   ======================= */
-$brand-700: #1e293b;   // slate-800
-$brand-600: #334155;   // slate-700
-$brand-500: #2563eb;   // blue-600 (accento sutil)
-$text-strong: #0f172a; // slate-900
-$text-muted: #64748b;  // slate-500
-$surface: #ffffff;
-$surface-muted: #f8fafc;
-$border: #e5e7eb;
-$danger: #b42318;      // red-700
-$danger-hover: #9a2715;
-$shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.08);
+@use 'src/styles/variables' as vars;
 
-/* utilitário para conteúdo apenas visual (caption) */
-.sr-only {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
+.usuario-list-container {
+  padding: 2rem;
+  animation: fadeIn 0.3s ease;
 }
 
-/* =======================
-   Cabeçalho da lista
-   ======================= */
 .list-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: .75rem;
-  margin-bottom: 1rem;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid vars.$color-border;
 
   .title-wrap {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: .5rem;
+    gap: 1rem;
 
     h2 {
+      color: vars.$color-text;
       margin: 0;
-      color: $text-strong;
-      font-weight: 700;
-      letter-spacing: .2px;
+      font-size: 1.8rem;
     }
 
     .badge {
-      padding: .2rem .5rem;
-      font-size: .85rem;
-      color: $brand-600;
-      background: #eef2f7;
-      border: 1px solid #e6ebf2;
-      border-radius: 999px;
+      background: vars.$color-primary-light;
+      color: vars.$color-primary-dark;
+      padding: 0.35rem 0.85rem;
+      border-radius: 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
     }
   }
 
   .toolbar {
-    display: inline-flex;
-    align-items: center;
+    display: flex;
+    gap: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+
+    .title-wrap {
+      justify-content: space-between;
+    }
   }
 }
 
-/* =======================
-   Botões locais
-   ======================= */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  padding: .55rem .9rem;
-  font-weight: 600;
-  background: $surface;
-  color: $text-strong;
-  box-shadow: $shadow;
-  transition: transform .06s ease, filter .2s ease, box-shadow .2s ease, border-color .2s ease;
-
-  i { font-size: .95rem; }
-
-  &:active { transform: translateY(1px); }
-  &:focus-visible {
-    outline: none;
-    border-color: rgba(37, 99, 235, .55); // azul
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, .18), $shadow;
-  }
-}
-.btn-primary {
-  background: $brand-600;
-  color: #fff;
-  &:hover { filter: brightness(1.03); }
-  &:disabled { opacity: .6; cursor: not-allowed; box-shadow: none; }
-}
-.btn-ghost {
-  background: #eef2f7;
-  color: $text-strong;
-  &:hover { filter: brightness(.98); }
-}
-.btn-danger {
-  background: $danger;
-  color: #fff;
-  &:hover { background: $danger-hover; }
-}
-
-/* =======================
-   Cartão & Tabela
-   ======================= */
-/* Cartão do grid */
 .table-card {
-  background: $surface;
-  border: 1px solid $border;
-  border-radius: 12px;
-  box-shadow: $shadow;
-  /* antes: overflow: auto; */
-  overflow: hidden;              /* ✅ some a barra no desktop */
+  background: vars.$color-surface;
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$shadow;
+  overflow: hidden;
+  margin-bottom: 2rem;
 }
 
-/* Tabela */
 .users-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0.5;
-  table-layout: fixed;           /* ✅ colunas estáveis, sem “empurrar” */
+  border-collapse: collapse;
+  font-size: 0.95rem;
 
-  thead th,
-  td {
-    /* Mantém uma linha por célula e evita overflow horizontal */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  thead {
+    background: linear-gradient(90deg, vars.$color-primary 0%, vars.$color-primary-dark 100%);
 
-  thead th {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    padding: .75rem .9rem;
-    text-align: left;
-    color: $text-strong;
-    background: #f3f4f6;
-    border-bottom: 1px solid $border;
-    font-weight: 700;
+    th {
+      padding: 1.25rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: white;
+      border: none;
 
-    &.col-actions { text-align: right; }
-    &:first-child { border-top-left-radius: 12px; }
-    &:last-child  { border-top-right-radius: 12px; }
-  }
+      &:first-child {
+        padding-left: 1.5rem;
+      }
 
-  td {
-    color: $text-strong;
-    vertical-align: middle;
-    border-bottom: 1px solid $border;
+      &:last-child {
+        padding-right: 1.5rem;
+      }
 
-    /* Links não quebram layout; mostram tooltip completo via title */
-    a {
-      color: $brand-600;
-      text-decoration: none;
-      transition: color .15s ease;
-      &:hover { color: $brand-500; }
+      &.col-actions {
+        text-align: center;
+      }
     }
   }
 
-  .actions {
-    display: inline-flex;
-    justify-content: flex-end;
-    gap: .5rem;
-    width: 100%;
+  tbody {
+    tr {
+      border-bottom: 1px solid vars.$color-border;
+      transition: background-color 0.2s ease;
+      background: white;
+
+      &:hover {
+        background: rgba(vars.$color-primary-light, 0.1);
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      td {
+        padding: 1.25rem 1rem;
+        color: vars.$color-text;
+
+        &:first-child {
+          padding-left: 1.5rem;
+          color: vars.$color-text-secondary;
+          font-weight: 500;
+        }
+
+        &:last-child {
+          padding-right: 1.5rem;
+        }
+
+        a[href^="mailto:"] {
+          color: vars.$color-primary;
+          text-decoration: none;
+          transition: color 0.2s ease;
+
+          &:hover {
+            color: vars.$color-primary-dark;
+            text-decoration: underline;
+          }
+        }
+
+        &.actions {
+          display: flex;
+          gap: 0.5rem;
+          justify-content: center;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    thead {
+      display: none;
+    }
+
+    tbody {
+      tr {
+        display: block;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        border: 1px solid vars.$color-border;
+        border-radius: vars.$border-radius;
+        background: white;
+
+        td {
+          display: flex;
+          justify-content: space-between;
+          padding: 0.75rem 0;
+          border: none;
+          align-items: center;
+
+          &::before {
+            content: attr(aria-label) ": ";
+            font-weight: 600;
+            color: vars.$color-text-secondary;
+            margin-right: 1rem;
+          }
+
+          &.actions {
+            justify-content: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid vars.$color-border;
+
+            &::before {
+              display: none;
+            }
+          }
+
+          &:first-child,
+          &:last-child {
+            padding: 0.75rem 0;
+          }
+        }
+      }
+    }
   }
 }
 
-/* Só no mobile (se a tabela ficar realmente maior que a tela) */
-@media (max-width: 768px) {
-  .table-card {
-    overflow-x: auto;    /* ✅ permite rolagem horizontal apenas no mobile */
-    -webkit-overflow-scrolling: touch;
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: vars.$color-surface;
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$shadow;
+  margin: 2rem 0;
+
+  i {
+    font-size: 3rem;
+    color: vars.$color-text-secondary;
+    margin-bottom: 1rem;
+    opacity: 0.7;
   }
 
-  /* Se preferir quebrar texto em mobile (e NÃO rolar), troque para: */
-  /* .users-table thead th, .users-table td { white-space: normal; } */
+  p {
+    color: vars.$color-text-secondary;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+  }
 }
 
-/* =======================
-   Modo escuro (opcional)
-   ======================= */
-@media (prefers-color-scheme: dark) {
-  .table-card { background: #0f172a; border-color: rgba(255,255,255,.10); }
-  .users-table thead th { background: #111827; color: #e5e7eb; border-bottom-color: rgba(255,255,255,.10); }
-  .users-table td { color: #e5e7eb; border-bottom-color: rgba(255,255,255,.08); }
-  .users-table tbody tr:nth-child(even) { background: rgba(255,255,255,.02); }
-  .users-table tbody tr:hover { background: rgba(255,255,255,.04); }
+// Loading state
+.table-loading {
+  position: relative;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  .empty-state { background: #0b1220; border-color: rgba(255,255,255,.10); color: #cbd5e1; }
+  &::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 3px solid vars.$color-primary-light;
+    border-top: 3px solid vars.$color-primary;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
