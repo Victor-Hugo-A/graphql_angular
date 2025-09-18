@@ -1,7 +1,7 @@
 <section class="list-header" aria-labelledby="usuarios-title">
   <div class="title-wrap">
     <h2 id="usuarios-title">Usuários</h2>
-    @let total = usuarios?.length ?? 0;
+    @let total = usuarios.length;
     <span class="badge" aria-live="polite">{{ total }} {{ total === 1 ? 'registro' : 'registros' }}</span>
   </div>
 
@@ -16,7 +16,7 @@
   </div>
 </section>
 
-@if (usuarios?.length) {
+@if (usuarios && usuarios.length > 0) {
   <div class="table-card" role="region" aria-labelledby="usuarios-title">
     <table class="users-table" role="table" aria-describedby="usuarios-caption">
       <caption id="usuarios-caption" class="sr-only">

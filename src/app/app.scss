@@ -1,3 +1,6 @@
+// Use as variáveis importadas corretamente
+@use 'src/styles/variables' as vars;
+
 .app-container {
   min-height: 100vh;
   display: flex;
@@ -6,7 +9,7 @@
 }
 
 .app-header {
-  background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+  background: linear-gradient(90deg, vars.$color-primary 0%, vars.$color-primary-dark 100%);
   color: white;
   padding: 2rem;
   text-align: center;
@@ -71,7 +74,6 @@
   top: 20px;
   right: 20px;
   z-index: 9999;
-  /* sem transform/opacity aqui */
 }
 
 .notification-content {
@@ -85,12 +87,12 @@
   max-width: min(90vw, 520px);
   white-space: normal;
   word-break: break-word;
-}
-.notification-content.success { background: #28a745; }
-.notification-content.error   { background: #dc3545; }
+
+  &.success { background: vars.$color-success; }
+  &.error { background: vars.$color-danger; }
 
   i { font-size: 1.2rem; }
-
+}
 
 // Animações de transição
 :host ::ng-deep {
@@ -108,5 +110,26 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+// Estilos globais para melhor consistência
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: vars.$color-text; // CORRIGIDO: usando vars.$
+  background: vars.$color-background; // CORRIGIDO: usando vars.$
+}
+
+// Melhorias para acessibilidade
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
