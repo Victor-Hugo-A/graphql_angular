@@ -1,10 +1,12 @@
 <section class="usuario-form" aria-labelledby="usuario-form-title">
   <header class="form-header">
     <h2 id="usuario-form-title">
-      <i class="fas"
-         [class.fa-user-edit]="isEditMode"
-         [class.fa-user-plus]="!isEditMode"
-         aria-hidden="true"></i>
+      <i
+        class="fas"
+        [class.fa-user-edit]="isEditMode"
+        [class.fa-user-plus]="!isEditMode"
+        aria-hidden="true"
+      ></i>
       {{ isEditMode ? 'Editar usuário' : 'Novo usuário' }}
     </h2>
   </header>
@@ -12,63 +14,102 @@
   <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()" novalidate>
     <!-- Nome -->
     <div class="form-group">
-      <label for="nome">Nome <span class="req" aria-hidden="true">*</span></label>
-      <input id="nome"
-             type="text"
-             formControlName="nome"
-             required
-             autocomplete="name"
-             placeholder="Digite o nome completo"
-             [class.error]="nome?.invalid && nome?.touched"
-             [attr.aria-invalid]="nome?.invalid && nome?.touched"
-             [attr.aria-describedby]="(nome?.invalid && nome?.touched) ? 'err-nome' : null" />
+      <label for="nome">
+        Nome <span class="req" aria-hidden="true">*</span>
+      </label>
+      <input
+        id="nome"
+        type="text"
+        formControlName="nome"
+        required
+        autocomplete="name"
+        placeholder="Digite o nome completo"
+        class="input"
+        [class.error]="nome?.invalid && nome?.touched"
+        [attr.aria-invalid]="(nome?.invalid && nome?.touched) ? 'true' : 'false'"
+        [attr.aria-describedby]="(nome?.invalid && nome?.touched) ? 'err-nome' : null"
+      />
 
       @if (nome?.invalid && nome?.touched) {
-        <div id="err-nome" class="error-message" role="alert">
-          @if (nome?.errors?.['required']) { <span>Nome é obrigatório.</span> }
-          @if (nome?.errors?.['minlength']) { <span>Informe pelo menos 3 caracteres.</span> }
+        <div
+          id="err-nome"
+          class="error-message"
+          role="alert"
+        >
+          @if (nome?.errors?.['required']) {
+            <span>Nome é obrigatório.</span>
+          }
+          @if (nome?.errors?.['minlength']) {
+            <span>Informe pelo menos 3 caracteres.</span>
+          }
         </div>
       }
     </div>
 
     <!-- Email -->
     <div class="form-group">
-      <label for="email">Email <span class="req" aria-hidden="true">*</span></label>
-      <input id="email"
-             type="email"
-             formControlName="email"
-             required
-             autocomplete="email"
-             placeholder="nome@exemplo.com"
-             [class.error]="email?.invalid && email?.touched"
-             [attr.aria-invalid]="email?.invalid && email?.touched"
-             [attr.aria-describedby]="(email?.invalid && email?.touched) ? 'err-email' : null" />
+      <label for="email">
+        Email <span class="req" aria-hidden="true">*</span>
+      </label>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        required
+        autocomplete="email"
+        placeholder="nome@exemplo.com"
+        class="input"
+        [class.error]="email?.invalid && email?.touched"
+        [attr.aria-invalid]="(email?.invalid && email?.touched) ? 'true' : 'false'"
+        [attr.aria-describedby]="(email?.invalid && email?.touched) ? 'err-email' : null"
+      />
 
       @if (email?.invalid && email?.touched) {
-        <div id="err-email" class="error-message" role="alert">
-          @if (email?.errors?.['required']) { <span>Email é obrigatório.</span> }
-          @if (email?.errors?.['email']) { <span>Digite um email válido.</span> }
+        <div
+          id="err-email"
+          class="error-message"
+          role="alert"
+        >
+          @if (email?.errors?.['required']) {
+            <span>Email é obrigatório.</span>
+          }
+          @if (email?.errors?.['email']) {
+            <span>Digite um email válido.</span>
+          }
         </div>
       }
     </div>
 
     <!-- Idade -->
     <div class="form-group">
-      <label for="idade">Idade <span class="req" aria-hidden="true">*</span></label>
-      <input id="idade"
-             type="number"
-             formControlName="idade"
-             required
-             inputmode="numeric"
-             min="13" max="120" step="1"
-             placeholder="Digite a idade"
-             [class.error]="idade?.invalid && idade?.touched"
-             [attr.aria-invalid]="idade?.invalid && idade?.touched"
-             [attr.aria-describedby]="(idade?.invalid && idade?.touched) ? 'err-idade' : null" />
+      <label for="idade">
+        Idade <span class="req" aria-hidden="true">*</span>
+      </label>
+      <input
+        id="idade"
+        type="number"
+        formControlName="idade"
+        required
+        inputmode="numeric"
+        min="13"
+        max="120"
+        step="1"
+        placeholder="Digite a idade"
+        class="input"
+        [class.error]="idade?.invalid && idade?.touched"
+        [attr.aria-invalid]="(idade?.invalid && idade?.touched) ? 'true' : 'false'"
+        [attr.aria-describedby]="(idade?.invalid && idade?.touched) ? 'err-idade' : null"
+      />
 
       @if (idade?.invalid && idade?.touched) {
-        <div id="err-idade" class="error-message" role="alert">
-          @if (idade?.errors?.['required']) { <span>Idade é obrigatória.</span> }
+        <div
+          id="err-idade"
+          class="error-message"
+          role="alert"
+        >
+          @if (idade?.errors?.['required']) {
+            <span>Idade é obrigatória.</span>
+          }
           @if (idade?.errors?.['min'] || idade?.errors?.['max']) {
             <span>Idade deve estar entre 13 e 120 anos.</span>
           }
@@ -78,17 +119,21 @@
 
     <!-- Ações -->
     <div class="form-actions">
-      <button type="button"
-              class="btn btn-ghost"
-              (click)="onCancel()">
+      <button
+        type="button"
+        class="btn btn-ghost"
+        (click)="onCancel()"
+      >
         <i class="fas fa-times" aria-hidden="true"></i>
         <span>Cancelar</span>
       </button>
 
-      <button type="submit"
-              class="btn btn-primary"
-              [disabled]="usuarioForm.invalid"
-              [attr.aria-disabled]="usuarioForm.invalid">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="usuarioForm.invalid"
+        [attr.aria-disabled]="usuarioForm.invalid"
+      >
         <i class="fas fa-save" aria-hidden="true"></i>
         <span>{{ isEditMode ? 'Atualizar' : 'Criar' }}</span>
       </button>

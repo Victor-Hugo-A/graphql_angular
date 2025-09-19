@@ -1,5 +1,11 @@
+// ============================================================================
+// 1. Import de variáveis (sempre no topo)
+// ============================================================================
 @use 'src/styles/variables' as vars;
 
+// ============================================================================
+// 2. Container do formulário e animação
+// ============================================================================
 .usuario-form {
   background: vars.$color-surface;
   border-radius: vars.$border-radius;
@@ -8,91 +14,100 @@
   margin-bottom: 2rem;
   animation: fadeIn 0.3s ease;
 
+  // ========================================================================
+  // 2.1 Cabeçalho
+  // ========================================================================
   .form-header {
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid vars.$color-border;
 
     h2 {
-      color: vars.$color-primary;
       margin: 0;
+      font-size: 1.5rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      font-size: 1.5rem;
+      color: vars.$color-primary;
     }
   }
 
+  // ========================================================================
+  // 2.2 Campos do form
+  // ========================================================================
   form {
     display: grid;
     gap: 1.5rem;
-  }
 
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-
-    label {
-      color: vars.$color-text;
-      font-weight: 500;
+    .form-group {
       display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
+      flex-direction: column;
+      gap: 0.5rem;
 
-    .req {
-      color: vars.$color-danger;
-      font-size: 0.875rem;
-    }
-
-    input {
-      padding: 0.75rem;
-      border: 1px solid vars.$color-border;
-      border-radius: vars.$border-radius;
-      font-size: 1rem;
-      transition: all 0.2s ease;
-      background: white;
-
-      &:focus {
-        outline: none;
-        border-color: vars.$color-primary;
-        box-shadow: 0 0 0 3px rgba(vars.$color-primary, 0.1);
+      label {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-weight: 500;
+        color: vars.$color-text;
       }
 
-      &.error {
-        border-color: vars.$color-danger;
-        box-shadow: 0 0 0 3px rgba(vars.$color-danger, 0.1);
+      .req {
+        color: vars.$color-danger;
+        font-size: 0.875rem;
       }
 
-      &[type="number"] {
-        -moz-appearance: textfield;
+      input {
+        padding: 0.75rem;
+        border: 1px solid vars.$color-border;
+        border-radius: vars.$border-radius;
+        font-size: 1rem;
+        background: #fff;
+        transition: all 0.2s ease;
 
-        &::-webkit-outer-spin-button,
-        &::-webkit-inner-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
+        &:focus {
+          outline: none;
+          border-color: vars.$color-primary;
+          box-shadow: 0 0 0 3px rgba(vars.$color-primary, 0.1);
+        }
+
+        &.error {
+          border-color: vars.$color-danger;
+          box-shadow: 0 0 0 3px rgba(vars.$color-danger, 0.1);
+        }
+
+        &[type="number"] {
+          -moz-appearance: textfield;
+
+          &::-webkit-outer-spin-button,
+          &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
         }
       }
-    }
 
-    .error-message {
-      color: vars.$color-danger;
-      font-size: 0.875rem;
-      margin-top: 0.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
+      .error-message {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-top: 0.25rem;
+        font-size: 0.875rem;
+        color: vars.$color-danger;
+      }
     }
   }
 
+  // ========================================================================
+  // 2.3 Ações do formulário
+  // ========================================================================
   .form-actions {
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
-    margin-top: 1rem;
     padding-top: 1rem;
     border-top: 1px solid vars.$color-border;
+    margin-top: 1rem;
 
     @media (max-width: 768px) {
       flex-direction: column;
@@ -100,7 +115,27 @@
   }
 }
 
-// Animações
+// ============================================================================
+// 3. Estado de loading do formulário
+// ============================================================================
+.form-loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.7;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: vars.$border-radius;
+    z-index: 10;
+  }
+}
+
+// ============================================================================
+// 4. Keyframe para fadeIn
+// ============================================================================
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -109,24 +144,5 @@
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-// Estados de loading
-.form-loading {
-  opacity: 0.7;
-  pointer-events: none;
-  position: relative;
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.7);
-    border-radius: vars.$border-radius;
-    z-index: 10;
   }
 }

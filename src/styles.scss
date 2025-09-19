@@ -1,7 +1,13 @@
-/* (Opcional) tema prebuilt do Material */
-@import '@angular/material/prebuilt-themes/indigo-pink.css';
+// ============================================================================
+// 2. Variáveis CSS (runtime)
+// ============================================================================
+@use 'src/styles/variables' as vars;
 
-/* ===== Paleta do app ===== */
+// ============================================================================
+// 1. Imports de tema do Angular Material
+// ============================================================================
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
 :root {
   --brand-700: #182848;
   --brand-500: #4b6cb7;
@@ -11,81 +17,85 @@
   --danger-hover: #c92f3d;
 }
 
-/* Backdrop do diálogo */
-.confirm-dialog-backdrop {
-  background: rgba(24, 40, 72, 0.55) !important;
-}
-
-/* Container do diálogo (atinge MDC e wrapper do Angular Material) */
-.confirm-dialog-panel .mdc-dialog__surface,
-.confirm-dialog-panel .mat-mdc-dialog-surface {
-  border-radius: 16px !important;
-  background: var(--surface) !important;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35) !important;
-  overflow: hidden;
-}
-
-/* Conteúdo interno (seu template) */
-.confirm-dialog-panel .app-confirm-dialog {
-  padding: 20px 22px;
-  min-width: 320px;
-  max-width: min(92vw, 520px);
-}
-
-.confirm-dialog-panel .app-confirm-title {
-  margin: 0 0 8px;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--brand-700);
-}
-
-.confirm-dialog-panel .app-confirm-content {
-  color: var(--text-strong);
-  line-height: 1.45;
-}
-
-.confirm-dialog-panel .app-confirm-actions {
-  margin-top: 18px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-/* ===== Botões custom do diálogo ===== */
-.confirm-dialog-panel .btn {
+// ─── estilos globais de botão ───────────────────────────────────────────────
+.btn {
   appearance: none;
-  border: 0;
-  border-radius: 10px;
-  padding: 10px 16px;
+  border: none;
+  border-radius: vars.$border-radius;
+  padding: 0.5rem 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: transform .06s ease, box-shadow .2s ease, filter .2s ease, opacity .2s ease;
   box-shadow: 0 6px 18px rgba(0,0,0,.12);
   outline: none;
+
+  &:active   { transform: translateY(1px); }
+  &:focus-visible {
+    box-shadow: 0 0 0 3px rgba(vars.$color-primary, .25), 0 6px 18px rgba(0,0,0,.12);
+  }
 }
 
-.confirm-dialog-panel .btn:active { transform: translateY(1px); }
-.confirm-dialog-panel .btn:focus-visible {
-  box-shadow: 0 0 0 3px rgba(75,108,183,.25), 0 6px 18px rgba(0,0,0,.12);
-}
-
-/* Cancelar “ghost” */
-.confirm-dialog-panel .btn-ghost {
+.btn-ghost {
   background: #eef2f7;
-  color: var(--text-strong);
+  color: vars.$color-text;
+  &:hover { filter: brightness(0.97); }
 }
-.confirm-dialog-panel .btn-ghost:hover { filter: brightness(0.97); }
 
-/* Excluir “danger” */
-.confirm-dialog-panel .btn-danger {
-  background: var(--danger);
+.btn-danger {
+  background: vars.$color-danger;
   color: #fff;
+  &:hover { background: var(--danger-hover); }
 }
-.confirm-dialog-panel .btn-danger:hover { background: var(--danger-hover); }
 
-/* (opcional) Primário com gradiente do header */
-.confirm-dialog-panel .btn-primary {
-  background: linear-gradient(90deg, var(--brand-500), var(--brand-700));
+.btn-primary {
+  background: linear-gradient(90deg, vars.$color-primary, vars.$color-primary-dark);
   color: #fff;
+
+  &:hover {
+    filter: brightness(1.05);
+  }
+
+  // ============================================================================
+  // 3. Diálogo de Confirmação Customizado
+  // ============================================================================
+  .confirm-dialog-backdrop {
+    background: rgba(24, 40, 72, 0.55) !important;
+  }
+
+  .confirm-dialog-panel {
+    // superfície do MDC / Angular Material
+    .mdc-dialog__surface,
+    .mat-mdc-dialog-surface {
+      border-radius: 16px !important;
+      background: var(--surface) !important;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35) !important;
+      overflow: hidden;
+    }
+
+    // conteúdo interno
+    .app-confirm-dialog {
+      padding: 20px 22px;
+      min-width: 320px;
+      max-width: min(92vw, 520px);
+    }
+
+    .app-confirm-title {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--brand-700);
+    }
+
+    .app-confirm-content {
+      color: var(--text-strong);
+      line-height: 1.45;
+    }
+
+    .app-confirm-actions {
+      margin-top: 18px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+  }
 }
-.confirm-dialog-panel .btn-primary:hover { filter: brightness(1.05); }

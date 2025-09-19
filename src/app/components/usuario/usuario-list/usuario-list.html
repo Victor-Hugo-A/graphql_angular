@@ -1,86 +1,95 @@
-<section class="list-header" aria-labelledby="usuarios-title">
-  <div class="title-wrap">
-    <h2 id="usuarios-title">Usuários</h2>
-    @let total = usuarios.length;
-    <span class="badge" aria-live="polite">{{ total }} {{ total === 1 ? 'registro' : 'registros' }}</span>
-  </div>
+<section class="usuario-list-container" role="region">
+  <!-- Cabeçalho -->
+  <section class="list-header" aria-labelledby="usuarios-title">
+    <div class="title-wrap">
+      <h2 id="usuarios-title">Usuários</h2>
+      <span class="badge" aria-live="polite">
+        {{ usuarios.length }} {{ usuarios.length === 1 ? 'registro' : 'registros' }}
+      </span>
+    </div>
 
-  <div class="toolbar">
-    <button type="button"
-            class="btn btn-primary"
-            (click)="onNovoUsuario()"
-            aria-label="Adicionar novo usuário">
-      <i class="fas fa-user-plus" aria-hidden="true"></i>
-      <span>Novo usuário</span>
-    </button>
-  </div>
-</section>
-
-@if (usuarios && usuarios.length > 0) {
-  <div class="table-card" role="region" aria-labelledby="usuarios-title">
-    <table class="users-table" role="table" aria-describedby="usuarios-caption">
-      <caption id="usuarios-caption" class="sr-only">
-        Lista de usuários cadastrados com colunas: número, nome, e-mail, idade e ações.
-      </caption>
-
-      <colgroup>
-        <col style="width: 72px" />
-        <col />
-        <col />
-        <col style="width: 120px" />
-        <col style="width: 200px" />
-      </colgroup>
-
-      <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Nome</th>
-        <th scope="col">Email</th>
-        <th scope="col">Idade</th>
-        <th scope="col" class="col-actions">Ações</th>
-      </tr>
-      </thead>
-
-      <tbody>
-        @for (u of usuarios; track u.id ?? $index; let i = $index) {
-          <tr>
-            <td aria-label="Número">{{ i + 1 }}</td>
-            <td>{{ u.nome }}</td>
-            <td>
-              <a  u.email
-                 [title]="'Enviar e-mail para ' + u.email">
-                {{ u.email }}
-              </a>
-            </td>
-            <td>{{ u.idade }}</td>
-            <td class="actions">
-              <button type="button"
-                      class="btn btn-ghost"
-                      (click)="onEditar(u)"
-                      aria-label="Editar {{ u.nome }}">
-                <i class="fas fa-edit" aria-hidden="true"></i>
-                <span>Editar</span>
-              </button>
-
-              <button type="button"
-                      class="btn btn-danger"
-                      (click)="onExcluir(u.id)"
-                      aria-label="Excluir {{ u.nome }}">
-                <i class="fas fa-trash-alt" aria-hidden="true"></i>
-                <span>Excluir</span>
-              </button>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-} @else {
-  <section class="empty-state" aria-live="polite">
-    <i class="fas fa-users-slash" aria-hidden="true"></i>
-    <p>Nenhum usuário cadastrado.</p>
-    <button type="button" class="btn btn-primary" (click)="onNovoUsuario()">
-      Adicionar primeiro usuário
-    </button>
+    <div class="toolbar">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="onNovoUsuario()"
+        aria-label="Adicionar novo usuário"
+      >
+        <i class="fas fa-user-plus" aria-hidden="true"></i>
+        <span>Novo usuário</span>
+      </button>
+    </div>
   </section>
-}
+
+  <!-- Tabela ou Estado Vazio -->
+  @if (usuarios && usuarios.length) {
+    <div class="table-card" role="region" aria-labelledby="usuarios-title">
+      <table class="users-table" role="table" aria-describedby="usuarios-caption">
+        <caption id="usuarios-caption" class="sr-only">
+          Lista de usuários: número, nome, email, idade e ações.
+        </caption>
+
+        <colgroup>
+          <col style="width: 72px" />
+          <col />
+          <col />
+          <col style="width: 120px" />
+          <col style="width: 200px" />
+        </colgroup>
+
+        <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nome</th>
+          <th scope="col">Email</th>
+          <th scope="col">Idade</th>
+          <th scope="col" class="col-actions">Ações</th>
+        </tr>
+        </thead>
+
+        <tbody>
+          @for (u of usuarios; track u.id; let i = $index) {
+            <tr>
+              <td aria-label="Número">{{ i + 1 }}</td>
+              <td>{{ u.nome }}</td>
+              <td>
+                <span title="{{ u.email }}">{{ u.email }}</span>
+              </td>
+              <td>{{ u.idade }}</td>
+              <td class="actions">
+                <button
+                  type="button"
+                  class="btn btn-ghost"
+                  (click)="onEditar(u)"
+                  aria-label="Editar {{ u.nome }}"
+                >
+                  <i class="fas fa-edit" aria-hidden="true"></i>
+                  <span>Editar</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  (click)="onExcluir(u.id)"
+                  aria-label="Excluir {{ u.nome }}"
+                >
+                  <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                  <span>Excluir</span>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <section class="empty-state" aria-live="polite">
+      <i class="fas fa-users-slash" aria-hidden="true"></i>
+      <p>Nenhum usuário cadastrado.</p>
+      <button type="button" class="btn btn-primary" (click)="onNovoUsuario()">
+        <i class="fas fa-user-plus" aria-hidden="true"></i>
+        <span>Adicionar primeiro usuário</span>
+      </button>
+    </section>
+  }
+</section>

@@ -1,6 +1,36 @@
-// Use as variáveis importadas corretamente
-@use './styles/variables' as vars;
+// ============================================================================
+// 1. Variables & Imports
+// ============================================================================
+@use 'src/styles/variables' as vars;
 
+// ============================================================================
+// 2. Reset e Estilos Globais
+// ============================================================================
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: vars.$color-text;
+  background: vars.$color-background;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// ============================================================================
+// 3. Layout Principal
+// ============================================================================
 .app-container {
   min-height: 100vh;
   display: flex;
@@ -9,14 +39,14 @@
 }
 
 .app-header {
-  background: linear-gradient(90deg, vars.$color-primary 0%, vars.$color-primary-dark 100%);
-  color: white;
+  background: linear-gradient(90deg, vars.$color-primary, vars.$color-primary-dark);
+  color: #fff;
   padding: 2rem;
   text-align: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   h1 {
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.5rem;
     font-size: 2.5rem;
     display: flex;
     align-items: center;
@@ -49,7 +79,7 @@
 .content-wrapper {
   width: 100%;
   max-width: 1200px;
-  background: white;
+  background: #fff;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -57,7 +87,7 @@
 
 .app-footer {
   background: #2c3e50;
-  color: white;
+  color: #fff;
   text-align: center;
   padding: 1rem;
   margin-top: auto;
@@ -69,6 +99,9 @@
   }
 }
 
+// ============================================================================
+// 4. Toast de Notificações
+// ============================================================================
 .notification-toast {
   position: fixed;
   top: 20px;
@@ -79,24 +112,28 @@
 .notification-content {
   padding: 1rem 1.5rem;
   border-radius: 8px;
-  color: #fff;
   display: inline-flex;
   align-items: center;
-  gap: .5rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  gap: 0.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   max-width: min(90vw, 520px);
   white-space: normal;
   word-break: break-word;
 
   &.success { background: vars.$color-success; }
-  &.error { background: vars.$color-danger; }
+  &.error   { background: vars.$color-danger; }
 
-  i { font-size: 1.2rem; }
+  i {
+    font-size: 1.2rem;
+  }
 }
 
-// Animações de transição
+// ============================================================================
+// 5. Animações de Transição (Angular View)
+// ============================================================================
 :host ::ng-deep {
-  app-usuario-list, app-usuario-form {
+  app-usuario-list,
+  app-usuario-form {
     display: block;
     animation: fadeIn 0.3s ease;
   }
@@ -110,26 +147,5 @@
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-// Estilos globais para melhor consistência
-* {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
-  color: vars.$color-text; // CORRIGIDO: usando vars.$
-  background: vars.$color-background; // CORRIGIDO: usando vars.$
-}
-
-// Melhorias para acessibilidade
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
   }
 }
