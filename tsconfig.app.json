@@ -14,6 +14,11 @@
     "!src/assets/environments/*.ts" // exclui environment.prod.ts
   ],
   "exclude": [
-    "src/**/*.spec.ts"
+    "src/main.server.ts",            // SSR fora do build do dev
+    "src/app/app.config.server.ts",  // config do SSR fora
+    "src/assets/environments/**",    // qualquer env perdido em assets
+    "src/environments/environment.prod.ts", // se existir aqui, exclui do dev
+    "src/**/*.spec.ts",
+    "src/test.ts"
   ]
 }

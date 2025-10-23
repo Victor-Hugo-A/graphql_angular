@@ -1,32 +1,35 @@
-// src/app/app.component.ts
-import { Component, OnInit } from '@angular/core';
+// src/app/components/dashboard/dashboard.component.ts
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 
-import { Usuario } from './models/usuario.model';
-import { UsuarioService } from './services/usuario'; // ajuste caso use ./services/usuario.service
-import { ErrorHandlerService } from './services/error/error-handler.service';
+import { Usuario } from '../../models/usuario.model';
+import { UsuarioService } from '../../services/user.service';
+import { ErrorHandlerService } from '../../services/error/error-handler.service';
+import { AuthService } from '../../services/auth/auth.service';
 
-import { UsuarioFormComponent } from './components/usuario/usuario-form/usuario-form';
-import { UsuarioListComponent } from './components/usuario/usuario-list/usuario-list';
-import {ConfirmDialogComponent} from './shared/confirm-dialog.component';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { UsuarioFormComponent } from '../usuario/usuario-form/usuario-form';
+import { UsuarioListComponent } from '../usuario/usuario-list/usuario-list';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.html',
-  styleUrls: ['./app.scss'],
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss'],
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
     UsuarioFormComponent,
     UsuarioListComponent,
-    MatDialogModule
+    MatDialogModule,
+    RouterModule
   ],
 })
-export class AppComponent implements OnInit {
+export class DashboardComponent implements OnInit {
   // Lista vinda do service (store reativo)
   usuarios$!: Observable<Usuario[]>;
 
@@ -42,21 +45,39 @@ export class AppComponent implements OnInit {
     type: 'success' as 'success' | 'error',
   };
 
-  constructor(
-    private usuarioService: UsuarioService,
-    private errorHandler: ErrorHandlerService,
-    private dialog: MatDialog
-  ) {
-    this.usuarios$ = this.usuarioService.usuarios$; // stream exposta pelo service
+  // Serviços
+  private usuarioService = inject(UsuarioService);
+  private errorHandler = inject(ErrorHandlerService);
+  private authService = inject(AuthService);
+  private dialog = inject(MatDialog);
+
+  constructor() {
+    this.usuarios$ = this.usuarioService.usuarios$;
   }
 
   ngOnInit(): void {
-    // carrega a lista na montagem
-    this.usuarioService.refreshUsuarios();
+    // Só carrega usuários se estiver autenticado
+    if (this.isAuthenticated) {
+      this.usuarioService.refreshUsuarios();
+    }
+  }
+
+  // ========= Propriedades de Autenticação =========
+  get currentUser() {
+    return this.authService.getCurrentUser();
+  }
+
+  get isAuthenticated() {
+    return this.authService.isAuthenticated();
+  }
+
+  // ========= Ações de Autenticação =========
+  logout(): void {
+    this.authService.logout();
+    this.resetUI();
   }
 
   // ========= Ações de UI =========
-
   onEditUsuario(usuario: Usuario): void {
     this.selectedUsuario = { ...usuario };
     this.isEditMode = true;
@@ -74,7 +95,6 @@ export class AppComponent implements OnInit {
   }
 
   // ========= CRUD =========
-
   onDeleteUsuario(usuarioId: number): void {
     this.dialog.open(ConfirmDialogComponent, {
       data: {
@@ -85,7 +105,7 @@ export class AppComponent implements OnInit {
       },
       panelClass: 'confirm-dialog-panel',
       backdropClass: 'confirm-dialog-backdrop',
-      disableClose: true, // evita fechar clicando fora
+      disableClose: true,
     }).afterClosed().subscribe((ok: any) => {
       if (!ok) return;
 
@@ -104,19 +124,14 @@ export class AppComponent implements OnInit {
     });
   }
 
-
   onSubmitForm(usuario: Usuario): void {
     if (this.isEditMode && usuario.id) {
       // UPDATE
       this.usuarioService.updateUsuario(usuario.id, usuario).subscribe({
         next: (response: any) => {
           try {
-            // valida e força erro legível se vierem GraphQL errors
             this.usuarioService.extractDataOrThrow<Usuario>(response, 'atualizarUsuario');
-
-            // Recarrega a lista (fonte única de verdade)
             this.usuarioService.refreshUsuarios();
-
             this.resetForm();
             this.showNotification('Usuário atualizado com sucesso!', 'success');
           } catch (error: any) {
@@ -134,10 +149,7 @@ export class AppComponent implements OnInit {
         next: (response: any) => {
           try {
             this.usuarioService.extractDataOrThrow<Usuario>(response, 'criarUsuario');
-
-            // Recarrega a lista
             this.usuarioService.refreshUsuarios();
-
             this.resetForm();
             this.showNotification('Usuário criado com sucesso!', 'success');
           } catch (error: any) {
@@ -153,11 +165,15 @@ export class AppComponent implements OnInit {
   }
 
   // ========= Utilitários =========
-
   private resetForm(): void {
     this.showForm = false;
     this.selectedUsuario = null;
     this.isEditMode = false;
+  }
+
+  private resetUI(): void {
+    this.resetForm();
+    this.notification = { ...this.notification, show: false };
   }
 
   showNotification(message: string, type: 'success'|'error') {
@@ -167,8 +183,6 @@ export class AppComponent implements OnInit {
     }, 3000);
   }
 
-
-  // Se quiser usar em *ngFor trackBy no template
   trackById(_index: number, item: Usuario): number {
     return item.id!;
   }
