@@ -1,7 +1,7 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
-import { App } from './components/dashboard/dashboard.component';
+import { App } from './components/pages/dashboard/dashboard.component';
 
 describe('App', () => {
   beforeEach(async () => {

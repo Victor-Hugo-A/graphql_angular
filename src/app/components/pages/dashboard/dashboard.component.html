@@ -1,0 +1,42 @@
+<header class="app-header">
+  <div class="header-content">
+    <div class="header-info">
+      <h1>
+        <i class="fas fa-users" aria-hidden="true"></i>
+        Sistema de Gerenciamento de Usuários
+      </h1>
+      <p>Gerencie os usuários do sistema de forma eficiente</p>
+    </div>
+
+    <div class="user-menu" *ngIf="currentUser as u">
+      <div class="user-info">
+        <span class="user-name">
+          <i class="fas fa-user" aria-hidden="true"></i>
+          {{ u.name }}
+        </span>
+        <span class="user-email">{{ u.email }}</span>
+      </div>
+
+      <button class="btn-logout" type="button" (click)="logout()" title="Sair do sistema">
+        <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+        Sair
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="content">
+  <!-- Grid 2 colunas: Form à esquerda, Lista à direita -->
+  <section class="grid">
+    <div class="col">
+      <!-- NÃO coloque routerLink aqui. O form lida com submit/cancel internamente. -->
+      <app-usuario-form></app-usuario-form>
+    </div>
+
+    <div class="col">
+      <!-- A lista já tem seus botões (Novo, Editar, Excluir).
+           Eles chamam métodos internos do componente (onNovoUsuario/onEditar/onExcluir). -->
+      <app-usuario-list></app-usuario-list>
+    </div>
+  </section>
+</main>

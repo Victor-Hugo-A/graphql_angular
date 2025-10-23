@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Usuario } from '../../../models/usuario.model';
+import { Usuario } from '../../../../models/usuario.model';
 
 @Component({
   selector: 'app-usuario-list',

@@ -1,104 +1,89 @@
-// src/app/services/auth/auth.service.ts
+// src/app/services/auth.service.ts
 import { Injectable, inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { gql } from 'apollo-angular';
-import { Usuario } from '../../models/usuario.model';
-import { LoginRequest, RegisterRequest, AuthResponse } from '../../models/auth.model';
+import { LOGIN, REGISTER } from '../../graphql/auth.gql';
+import { map } from 'rxjs/operators';
+import { Observable, BehaviorSubject } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface AuthPayload {
+  token: string;
+  user: AuthUser;
+}
+
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private apollo = inject(Apollo);
-  private router = inject(Router);
 
-  private currentUserSubject = new BehaviorSubject<Usuario | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  // estado reativo opcional (útil pro dashboard/menus)
+  private currentUserSubject = new BehaviorSubject<AuthUser | null>(this.readUserFromStorage());
+  currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor() {
-    this.loadUserFromStorage();
+  isAuthenticated(): boolean {
+    return !!this.getToken();
   }
 
-  private loadUserFromStorage(): void {
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-      this.currentUserSubject.next(JSON.parse(savedUser));
-    }
+  getToken(): string | null {
+    return localStorage.getItem('access_token');
   }
 
-  // GraphQL Mutations
-  private LOGIN_MUTATION = gql`
-    mutation Login($email: String!, $password: String!) {
-      login(email: $email, password: $password) {
-        id
-        name
-        email
-        age
-        role
-        title
-        createdAt
-      }
-    }
-  `;
-
-  private REGISTER_MUTATION = gql`
-    mutation Register($input: UserInput!) {
-      register(input: $input) {
-        id
-        name
-        email
-        age
-        role
-        title
-        createdAt
-      }
-    }
-  `;
-
-  login(credentials: LoginRequest): Observable<any> {
-    return this.apollo.mutate({
-      mutation: this.LOGIN_MUTATION,
-      variables: credentials
-    }).pipe(
-      tap((result: any) => {
-        if (result.data?.login) {
-          this.setCurrentUser(result.data.login);
-        }
-      })
-    );
-  }
-
-  register(userData: RegisterRequest): Observable<any> {
-    return this.apollo.mutate({
-      mutation: this.REGISTER_MUTATION,
-      variables: { input: userData }
-    }).pipe(
-      tap((result: any) => {
-        if (result.data?.register) {
-          this.setCurrentUser(result.data.register);
-        }
-      })
-    );
-  }
-
-  setCurrentUser(user: Usuario): void {
-    this.currentUserSubject.next(user);
-    localStorage.setItem('currentUser', JSON.stringify(user));
-  }
-
-  getCurrentUser(): Usuario | null {
+  getCurrentUser(): AuthUser | null {
     return this.currentUserSubject.value;
   }
 
-  logout(): void {
-    this.currentUserSubject.next(null);
-    localStorage.removeItem('currentUser');
-    this.router.navigate(['/login']).then(r => true);
+  private readUserFromStorage(): AuthUser | null {
+    try {
+      const raw = localStorage.getItem('current_user');
+      return raw ? (JSON.parse(raw) as AuthUser) : null;
+    } catch {
+      return null;
+    }
   }
 
-  isAuthenticated(): boolean {
-    return !!this.currentUserSubject.value;
+  private persistSession(payload: AuthPayload) {
+    localStorage.setItem('access_token', payload.token);
+    localStorage.setItem('current_user', JSON.stringify(payload.user));
+    this.currentUserSubject.next(payload.user);
+  }
+
+  login(email: string, password: string): Observable<boolean> {
+    return this.apollo.mutate<{ login: AuthPayload }>({
+      mutation: LOGIN,
+      variables: { email, password },
+      fetchPolicy: 'no-cache',
+    }).pipe(
+      map((res) => {
+        const payload = res.data?.login;
+        if (!payload?.token) throw new Error('Token ausente na resposta de login.');
+        this.persistSession(payload);
+        return true;
+      })
+    );
+  }
+
+  register(name: string, email: string, password: string): Observable<boolean> {
+    return this.apollo.mutate<{ register: AuthPayload }>({
+      mutation: REGISTER,
+      variables: { name, email, password },
+      fetchPolicy: 'no-cache',
+    }).pipe(
+      map((res) => {
+        const payload = res.data?.register;
+        if (!payload?.token) throw new Error('Token ausente na resposta de registro.');
+        this.persistSession(payload);
+        return true;
+      })
+    );
+  }
+
+  logout(): void {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('current_user');
+    this.currentUserSubject.next(null);
   }
 }

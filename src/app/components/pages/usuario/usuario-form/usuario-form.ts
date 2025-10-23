@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Usuario } from '../../../models/usuario.model';
+import { Usuario } from '../../../../models/usuario.model';
 
 @Component({
   selector: 'app-usuario-form',

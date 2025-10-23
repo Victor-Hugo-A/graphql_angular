@@ -1,20 +1,14 @@
+// src/app/services/auth/auth.guard.ts
 import { Injectable, inject } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, Router, UrlTree } from '@angular/router';
 import { AuthService } from './auth.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
-  private authService = inject(AuthService);
+  private auth = inject(AuthService);
   private router = inject(Router);
 
-  canActivate(): boolean {
-    if (this.authService.isAuthenticated()) {
-      return true;
-    } else {
-      this.router.navigate(['/login']).then(r => true);
-      return false;
-    }
+  canActivate(): boolean | UrlTree {
+    return this.auth.isAuthenticated() ? true : this.router.parseUrl('/login');
   }
 }
