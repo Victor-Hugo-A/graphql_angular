@@ -1,0 +1,5 @@
+<div class="toast-wrap">
+  @for (t of toasts(); track t.id) {
+    <app-toast-item [toast]="t" (dismiss)="dismiss($event)"></app-toast-item>
+  }
+</div>

@@ -1,68 +1,72 @@
-<div class="login-container">
-  <div class="card">
-    <div class="card-header">
-      <h2 class="card-title">Login</h2>
+<div class="auth-shell">
+  <div class="brand">
+    <div class="logo-circle">U</div>
+    <div class="brand-text">
+      <span>Gerenciamento de usuários</span>
     </div>
+  </div>
 
-    <div class="card-body">
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form">
+  <div class="auth-card">
+    <header class="auth-header">
+      <h1>Entrar</h1>
+      <p>Acesse seu painel para gerenciar usuários</p>
+    </header>
 
-        <!-- E-mail -->
-        <div class="form-group">
-          <label for="email" class="form-label">Email</label>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form" novalidate>
+      <!-- Email -->
+      <div class="field">
+        <label for="email">Email</label>
+        <div class="control">
           <input
-            type="email"
             id="email"
+            type="email"
             formControlName="email"
-            class="form-control"
-            [class.is-invalid]="invalid('email')"
             placeholder="seu@email.com"
+            [class.is-invalid]="invalid('email')"
+            autocomplete="username"
           />
-
-          @if (invalid('email')) {
-            <div class="invalid-feedback">
-              @if (loginForm.get('email')?.errors?.['required']) {
-                <div>Email é obrigatório</div>
-              }
-              @if (loginForm.get('email')?.errors?.['email']) {
-                <div>Email inválido</div>
-              }
-            </div>
-          }
+          <span class="icon">@</span>
         </div>
 
-        <!-- Senha -->
-        <div class="form-group">
-          <label for="password" class="form-label">Senha</label>
+        @if (invalid('email')) {
+          <div class="invalid-feedback">
+            @if (loginForm.get('email')?.errors?.['required']) { <div>Email é obrigatório.</div> }
+            @if (loginForm.get('email')?.errors?.['email']) { <div>Informe um email válido.</div> }
+          </div>
+        }
+      </div>
+
+      <!-- Senha -->
+      <div class="field">
+        <label for="password">Senha</label>
+        <div class="control">
           <input
-            type="password"
             id="password"
+            type="password"
             formControlName="password"
-            class="form-control"
+            placeholder="••••••••"
             [class.is-invalid]="invalid('password')"
-            placeholder="Sua senha"
+            autocomplete="current-password"
           />
-
-          @if (invalid('password')) {
-            <div class="invalid-feedback">
-              @if (loginForm.get('password')?.errors?.['required']) {
-                <div>Senha é obrigatória</div>
-              }
-              @if (loginForm.get('password')?.errors?.['minlength']) {
-                <div>Senha deve ter pelo menos 6 caracteres</div>
-              }
-            </div>
-          }
+          <span class="icon">•</span>
         </div>
 
-        <button type="submit" class="btn btn-primary btn-block" [disabled]="loginForm.invalid || loading">
-          @if (loading) { <span class="loading"></span> Entrando... } @else { Entrar }
-        </button>
+        @if (invalid('password')) {
+          <div class="invalid-feedback">
+            @if (loginForm.get('password')?.errors?.['required']) { <div>Senha é obrigatória.</div> }
+            @if (loginForm.get('password')?.errors?.['minlength']) { <div>Mínimo de 6 caracteres.</div> }
+          </div>
+        }
+      </div>
 
-        <div class="text-center mt-3">
-          <a routerLink="/register" class="link">Não tem conta? Registre-se</a>
-        </div>
-      </form>
-    </div>
+      <button type="submit" class="btn primary" [disabled]="loginForm.invalid || loading">
+        @if (loading) { <span class="spinner" aria-hidden="true"></span> Entrando... } @else { Entrar }
+      </button>
+
+      <div class="meta">
+        <span class="muted">Ainda não tem conta?</span>
+        <a routerLink="/register" class="link">Criar conta</a>
+      </div>
+    </form>
   </div>
 </div>

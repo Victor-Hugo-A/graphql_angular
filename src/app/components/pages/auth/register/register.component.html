@@ -1,80 +1,92 @@
-<div class="register-container">
-  <div class="card">
-    <div class="card-header">
-      <h2 class="card-title">Registrar</h2>
+<div class="auth-shell">
+  <div class="brand">
+    <div class="logo-circle">U</div>
+    <div class="brand-text">
+      <span>Gerenciamento de usuários</span>
     </div>
+  </div>
 
-    <div class="card-body">
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form">
+  <div class="auth-card">
+    <header class="auth-header">
+      <h1>Criar conta</h1>
+      <p>Cadastre-se para acessar o painel</p>
+    </header>
 
-        <!-- Nome -->
-        <div class="form-group">
-          <label for="name" class="form-label">Nome Completo</label>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form" novalidate>
+      <!-- Nome -->
+      <div class="field">
+        <label for="name">Nome completo</label>
+        <div class="control">
           <input
-            type="text"
             id="name"
+            type="text"
             formControlName="name"
-            class="form-control"
-            [class.is-invalid]="invalid('name')"
             placeholder="Seu nome completo"
+            [class.is-invalid]="invalid('name')"
+            autocomplete="name"
           />
-
-          @if (invalid('name')) {
-            <div class="invalid-feedback">
-              @if (registerForm.get('name')?.errors?.['required']) { <div>Nome é obrigatório</div> }
-              @if (registerForm.get('name')?.errors?.['minlength']) { <div>Nome deve ter pelo menos 2 caracteres</div> }
-            </div>
-          }
+          <span class="icon">👤</span>
         </div>
+        @if (invalid('name')) {
+          <div class="invalid-feedback">
+            @if (registerForm.get('name')?.errors?.['required']) { <div>Nome é obrigatório.</div> }
+            @if (registerForm.get('name')?.errors?.['minlength']) { <div>Mínimo de 2 caracteres.</div> }
+          </div>
+        }
+      </div>
 
-        <!-- Email -->
-        <div class="form-group">
-          <label for="email" class="form-label">Email</label>
+      <!-- Email -->
+      <div class="field">
+        <label for="email">Email</label>
+        <div class="control">
           <input
-            type="email"
             id="email"
+            type="email"
             formControlName="email"
-            class="form-control"
-            [class.is-invalid]="invalid('email')"
             placeholder="seu@email.com"
+            [class.is-invalid]="invalid('email')"
+            autocomplete="email"
           />
-
-          @if (invalid('email')) {
-            <div class="invalid-feedback">
-              @if (registerForm.get('email')?.errors?.['required']) { <div>Email é obrigatório</div> }
-              @if (registerForm.get('email')?.errors?.['email']) { <div>Email inválido</div> }
-            </div>
-          }
+          <span class="icon">@</span>
         </div>
+        @if (invalid('email')) {
+          <div class="invalid-feedback">
+            @if (registerForm.get('email')?.errors?.['required']) { <div>Email é obrigatório.</div> }
+            @if (registerForm.get('email')?.errors?.['email']) { <div>Informe um email válido.</div> }
+          </div>
+        }
+      </div>
 
-        <!-- Senha -->
-        <div class="form-group">
-          <label for="password" class="form-label">Senha</label>
+      <!-- Senha -->
+      <div class="field">
+        <label for="password">Senha</label>
+        <div class="control">
           <input
-            type="password"
             id="password"
+            type="password"
             formControlName="password"
-            class="form-control"
+            placeholder="••••••••"
             [class.is-invalid]="invalid('password')"
-            placeholder="Sua senha"
+            autocomplete="new-password"
           />
-
-          @if (invalid('password')) {
-            <div class="invalid-feedback">
-              @if (registerForm.get('password')?.errors?.['required']) { <div>Senha é obrigatória</div> }
-              @if (registerForm.get('password')?.errors?.['minlength']) { <div>Senha deve ter pelo menos 6 caracteres</div> }
-            </div>
-          }
+          <span class="icon">•</span>
         </div>
+        @if (invalid('password')) {
+          <div class="invalid-feedback">
+            @if (registerForm.get('password')?.errors?.['required']) { <div>Senha é obrigatória.</div> }
+            @if (registerForm.get('password')?.errors?.['minlength']) { <div>Mínimo de 6 caracteres.</div> }
+          </div>
+        }
+      </div>
 
-        <button type="submit" class="btn btn-primary btn-block" [disabled]="registerForm.invalid || loading">
-          @if (loading) { <span class="loading"></span> Registrando... } @else { Registrar }
-        </button>
+      <button type="submit" class="btn primary" [disabled]="registerForm.invalid || loading">
+        @if (loading) { <span class="spinner" aria-hidden="true"></span> Criando conta... } @else { Criar conta }
+      </button>
 
-        <div class="text-center mt-3">
-          <a routerLink="/login" class="link">Já tem conta? Faça login</a>
-        </div>
-      </form>
-    </div>
+      <div class="meta">
+        <span class="muted">Já possui conta?</span>
+        <a routerLink="/login" class="link">Entrar</a>
+      </div>
+    </form>
   </div>
 </div>

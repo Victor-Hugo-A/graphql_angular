@@ -1,0 +1,15 @@
+.toast-wrap {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+  pointer-events: none; /* permite clicar no conteúdo abaixo */
+}
+
+/* os itens podem ser clicados normalmente */
+.toast-wrap :where(.toast) {
+  pointer-events: auto;
+}

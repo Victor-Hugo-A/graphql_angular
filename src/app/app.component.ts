@@ -11,7 +11,6 @@ import {ToastContainerComponent} from './shared/toast/toast-container.component'
   imports: [CommonModule, RouterOutlet, ToastContainerComponent],
   template: `
     <app-toasts></app-toasts>
-
     <router-outlet></router-outlet>
   `
 })
