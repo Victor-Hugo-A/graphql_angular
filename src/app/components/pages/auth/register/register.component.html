@@ -1,12 +1,13 @@
-<!-- src/app/components/auth/register/register.component.html -->
 <div class="register-container">
   <div class="card">
     <div class="card-header">
       <h2 class="card-title">Registrar</h2>
     </div>
+
     <div class="card-body">
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form">
 
+        <!-- Nome -->
         <div class="form-group">
           <label for="name" class="form-label">Nome Completo</label>
           <input
@@ -14,15 +15,19 @@
             id="name"
             formControlName="name"
             class="form-control"
-            [class.is-invalid]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+            [class.is-invalid]="invalid('name')"
             placeholder="Seu nome completo"
-          >
-          <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" class="invalid-feedback">
-            <div *ngIf="registerForm.get('name')?.errors?.['required']">Nome é obrigatório</div>
-            <div *ngIf="registerForm.get('name')?.errors?.['minlength']">Nome deve ter pelo menos 2 caracteres</div>
-          </div>
+          />
+
+          @if (invalid('name')) {
+            <div class="invalid-feedback">
+              @if (registerForm.get('name')?.errors?.['required']) { <div>Nome é obrigatório</div> }
+              @if (registerForm.get('name')?.errors?.['minlength']) { <div>Nome deve ter pelo menos 2 caracteres</div> }
+            </div>
+          }
         </div>
 
+        <!-- Email -->
         <div class="form-group">
           <label for="email" class="form-label">Email</label>
           <input
@@ -30,15 +35,19 @@
             id="email"
             formControlName="email"
             class="form-control"
-            [class.is-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+            [class.is-invalid]="invalid('email')"
             placeholder="seu@email.com"
-          >
-          <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="invalid-feedback">
-            <div *ngIf="registerForm.get('email')?.errors?.['required']">Email é obrigatório</div>
-            <div *ngIf="registerForm.get('email')?.errors?.['email']">Email inválido</div>
-          </div>
+          />
+
+          @if (invalid('email')) {
+            <div class="invalid-feedback">
+              @if (registerForm.get('email')?.errors?.['required']) { <div>Email é obrigatório</div> }
+              @if (registerForm.get('email')?.errors?.['email']) { <div>Email inválido</div> }
+            </div>
+          }
         </div>
 
+        <!-- Senha -->
         <div class="form-group">
           <label for="password" class="form-label">Senha</label>
           <input
@@ -46,26 +55,20 @@
             id="password"
             formControlName="password"
             class="form-control"
-            [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+            [class.is-invalid]="invalid('password')"
             placeholder="Sua senha"
-          >
-          <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="invalid-feedback">
-            <div *ngIf="registerForm.get('password')?.errors?.['required']">Senha é obrigatória</div>
-            <div *ngIf="registerForm.get('password')?.errors?.['minlength']">Senha deve ter pelo menos 6 caracteres</div>
-          </div>
+          />
+
+          @if (invalid('password')) {
+            <div class="invalid-feedback">
+              @if (registerForm.get('password')?.errors?.['required']) { <div>Senha é obrigatória</div> }
+              @if (registerForm.get('password')?.errors?.['minlength']) { <div>Senha deve ter pelo menos 6 caracteres</div> }
+            </div>
+          }
         </div>
 
-        <div *ngIf="error" class="alert alert-error">
-          {{ error }}
-        </div>
-
-        <button
-          type="submit"
-          class="btn btn-primary btn-block"
-          [disabled]="registerForm.invalid || loading"
-        >
-          <span *ngIf="loading" class="loading"></span>
-          {{ loading ? 'Registrando...' : 'Registrar' }}
+        <button type="submit" class="btn btn-primary btn-block" [disabled]="registerForm.invalid || loading">
+          @if (loading) { <span class="loading"></span> Registrando... } @else { Registrar }
         </button>
 
         <div class="text-center mt-3">

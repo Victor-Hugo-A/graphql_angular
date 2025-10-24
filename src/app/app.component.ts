@@ -3,12 +3,15 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth/auth.service';
+import {ToastContainerComponent} from './shared/toast/toast-container.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, ToastContainerComponent],
   template: `
+    <app-toasts></app-toasts>
+
     <router-outlet></router-outlet>
   `
 })
