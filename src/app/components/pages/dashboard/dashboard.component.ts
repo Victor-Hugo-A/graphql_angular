@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {Router, RouterLinkActive} from '@angular/router';
+import {Router} from '@angular/router';
 
 import { AuthService, AuthUser } from '../../../services/auth/auth.service';
 
@@ -11,7 +11,7 @@ import { UsuarioListComponent} from '../usuario/usuario-list/usuario-list';
 @Component({
   standalone: true,
   selector: 'app-dashboard',
-  imports: [CommonModule, UsuarioFormComponent, UsuarioListComponent, RouterLinkActive],
+  imports: [CommonModule, UsuarioFormComponent, UsuarioListComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })

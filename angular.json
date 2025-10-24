@@ -28,7 +28,7 @@
             "inlineStyleLanguage": "scss",
             "assets": [{ "glob": "**/*", "input": "public" }],
             "styles": ["src/styles.scss"],
-            "polyfills": "src/polyfills.ts",  // ← CERTIFIQUE-SE QUE ESTÁ AQUI
+            "polyfills": "zone.js",
           },
           "configurations": {
             "production": {
