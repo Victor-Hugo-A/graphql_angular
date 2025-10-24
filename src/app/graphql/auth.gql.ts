@@ -25,3 +25,44 @@ export const REGISTER = gql`
     }
   }
 `;
+export const Q_TODOS = gql`
+  query TodosUsuarios {
+    todosUsuarios {
+      id
+      nome
+      email
+      idade
+    }
+  }
+`;
+
+export const M_CRIAR = gql`
+  mutation CriarUsuario($nome: String!, $email: String!, $idade: Int!) {
+    criarUsuario(nome: $nome, email: $email, idade: $idade) {
+      id
+      nome
+      email
+      idade
+    }
+  }
+`;
+
+export const M_ATUALIZAR = gql`
+  mutation AtualizarUsuario($id: Long!, $nome: String, $email: String, $idade: Int) {
+    atualizarUsuario(id: $id, nome: $nome, email: $email, idade: $idade) {
+      id
+      nome
+      email
+      idade
+    }
+  }
+`;
+
+export const M_DELETAR = gql`
+  mutation DeletarUsuario($id: Long!) {
+    deletarUsuario(id: $id)
+  }
+`;
+
+
+

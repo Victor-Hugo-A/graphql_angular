@@ -1,9 +1,8 @@
 export interface Usuario {
-  id?: number;
+  id: number | string;
   nome: string;
   email: string;
-  password?: string;
-  idade?: number;
+  idade: number;
   role?: 'User' | 'Author' | 'Familiar';
   title?: string;
   createdAt?: Date;

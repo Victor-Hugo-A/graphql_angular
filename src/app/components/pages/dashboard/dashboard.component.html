@@ -1,42 +1,45 @@
-<header class="app-header">
-  <div class="header-content">
-    <div class="header-info">
-      <h1>
-        <i class="fas fa-users" aria-hidden="true"></i>
-        Sistema de Gerenciamento de Usuários
-      </h1>
-      <p>Gerencie os usuários do sistema de forma eficiente</p>
-    </div>
+<header class="dash-header">
+  <div class="title">
+    <h1>Sistema de Gerenciamento de Usuários</h1>
+    <p>Gerencie os usuários do sistema de forma eficiente</p>
+  </div>
 
-    <div class="user-menu" *ngIf="currentUser as u">
-      <div class="user-info">
-        <span class="user-name">
-          <i class="fas fa-user" aria-hidden="true"></i>
-          {{ u.name }}
-        </span>
-        <span class="user-email">{{ u.email }}</span>
+  <div class="account">
+    @if (currentUser) {
+      <div class="user">
+        <strong>{{ currentUser.name }}</strong>
+        <span class="muted">{{ currentUser.email }}</span>
       </div>
-
-      <button class="btn-logout" type="button" (click)="logout()" title="Sair do sistema">
-        <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
-        Sair
-      </button>
-    </div>
+      <button type="button" class="btn ghost" (click)="logout()">Sair</button>
+    } @else {
+      <div class="user">
+        <strong>Visitante</strong>
+        <span class="muted">Sem sessão ativa</span>
+      </div>
+    }
   </div>
 </header>
 
-<main class="content">
-  <!-- Grid 2 colunas: Form à esquerda, Lista à direita -->
-  <section class="grid">
-    <div class="col">
-      <!-- NÃO coloque routerLink aqui. O form lida com submit/cancel internamente. -->
-      <app-usuario-form></app-usuario-form>
+<main class="dash-grid">
+  <section class="card" #formSection>
+    <header class="card-head">
+      <h2>Cadastro / edição</h2>
+    </header>
+    <div class="card-body">
+      <app-usuario-form />
     </div>
+  </section>
 
-    <div class="col">
-      <!-- A lista já tem seus botões (Novo, Editar, Excluir).
-           Eles chamam métodos internos do componente (onNovoUsuario/onEditar/onExcluir). -->
-      <app-usuario-list></app-usuario-list>
+  <section class="card">
+    <header class="card-head">
+      <h2>Usuários</h2>
+      <span class="pill" aria-live="polite">
+        {{ totalUsuarios }} {{ totalUsuarios === 1 ? 'registro' : 'registros' }}
+      </span>
+    </header>
+    <div class="card-body">
+      <!-- ✅ recebe o total da lista e trata o botão "novo" -->
+      <app-usuario-list (countChange)="onCountChange($event)" (novo)="focusNovo()" />
     </div>
   </section>
 </main>

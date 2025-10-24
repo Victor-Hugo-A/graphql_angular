@@ -1,39 +1,65 @@
-import { Component, OnInit, Output, EventEmitter, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Output, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Usuario } from '../../../../models/usuario.model';
+import { Apollo } from 'apollo-angular';
+import { Q_TODOS, M_DELETAR } from '../../../../graphql/auth.gql';
+import { ToastService} from '../../../../shared/toast/toast.service';
+import { Usuario} from '../../../../models/usuario.model';
 
 @Component({
-  selector: 'app-usuario-list',
   standalone: true,
-  templateUrl: './usuario-list.html',
-  styleUrls: ['./usuario-list.scss'],
+  selector: 'app-usuario-list',
   imports: [CommonModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './usuario-list.html',
+  styleUrl: './usuario-list.scss'
 })
 export class UsuarioListComponent implements OnInit {
-  @Input() usuarios: Usuario[] = []; // recebe do pai (AppComponent)
-  @Output() edit = new EventEmitter<Usuario>();
-  @Output() delete = new EventEmitter<number>();
-  @Output() newUser = new EventEmitter<void>();
+  private apollo = inject(Apollo);
+  private toast = inject(ToastService);
+
+  usuarios = signal<Usuario[]>([]);
+  loading = signal<boolean>(false);
+
+  @Output() countChange = new EventEmitter<number>();
+  @Output() novo = new EventEmitter<void>();
 
   ngOnInit(): void {
-    // Nenhum fetch aqui — lista 100% apresentacional
+    this.load();
   }
 
-  onEditar(usuario: Usuario): void {
-    this.edit.emit(usuario);
+  load(): void {
+    this.loading.set(true);
+    this.apollo.watchQuery<{ todosUsuarios: Usuario[] }>({
+      query: Q_TODOS,
+      fetchPolicy: 'network-only', // pega os 3 que já estão no banco
+    }).valueChanges.subscribe({
+      next: ({ data }) => {
+        const list = data?.todosUsuarios ?? [];
+        this.usuarios.set(list);
+        this.countChange.emit(list.length);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this.toast.error(err?.message ?? 'Erro ao carregar usuários.');
+      }
+    });
   }
 
-  onExcluir(usuarioId?: number): void {
-    if (usuarioId == null) return; // evita undefined
-      this.delete.emit(usuarioId);
+  onNovoClick() {
+    this.novo.emit();
   }
 
-  onNovoUsuario(): void {
-    this.newUser.emit();
-  }
-
-  trackById(_i: number, u: Usuario) {
-    return u.id ?? _i;
+  async deletar(id: Usuario['id']) {
+    try {
+      await this.apollo.mutate({
+        mutation: M_DELETAR,
+        variables: { id },
+        fetchPolicy: 'no-cache',
+      }).toPromise();
+      this.toast.success('Usuário removido.');
+      this.load(); // recarrega a lista
+    } catch (e: any) {
+      this.toast.error(e?.message ?? 'Erro ao remover usuário.');
+    }
   }
 }

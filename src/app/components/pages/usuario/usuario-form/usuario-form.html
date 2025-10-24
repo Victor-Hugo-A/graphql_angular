@@ -1,69 +1,67 @@
-<form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()" class="usuario-form">
-  <div class="form-group">
-    <label for="nome">Nome</label>
-    <input
-      type="text"
-      id="nome"
-      formControlName="nome"
-      class="form-control"
-      [class.is-invalid]="nome?.invalid && nome?.touched"
-      placeholder="Digite o nome"
-    >
-    <div *ngIf="nome?.invalid && nome?.touched" class="invalid-feedback">
-      <div *ngIf="nome?.errors?.['required']">Nome é obrigatório</div>
-      <div *ngIf="nome?.errors?.['minlength']">Nome deve ter pelo menos 3 caracteres</div>
+<form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()" class="usuario-form" novalidate>
+  <div class="form-grid">
+    <!-- Nome -->
+    <div class="form-group">
+      <label for="nome">Nome</label>
+      <input
+        type="text"
+        id="nome"
+        formControlName="nome"
+        [class.is-invalid]="nome?.invalid && (nome?.touched || nome?.dirty)"
+        placeholder="Digite o nome"
+        autocomplete="name"
+      />
+      @if (nome?.invalid && (nome?.touched || nome?.dirty)) {
+        <div class="invalid-feedback">
+          @if (nome?.errors?.['required']) { <div>Nome é obrigatório</div> }
+          @if (nome?.errors?.['minlength']) { <div>Nome deve ter pelo menos 3 caracteres</div> }
+        </div>
+      }
     </div>
-  </div>
 
-  <div class="form-group">
-    <label for="email">Email</label>
-    <input
-      type="email"
-      id="email"
-      formControlName="email"
-      class="form-control"
-      [class.is-invalid]="email?.invalid && email?.touched"
-      placeholder="Digite o email"
-    >
-    <div *ngIf="email?.invalid && email?.touched" class="invalid-feedback">
-      <div *ngIf="email?.errors?.['required']">Email é obrigatório</div>
-      <div *ngIf="email?.errors?.['email']">Email inválido</div>
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        formControlName="email"
+        [class.is-invalid]="email?.invalid && (email?.touched || email?.dirty)"
+        placeholder="Digite o email"
+        autocomplete="email"
+      />
+      @if (email?.invalid && (email?.touched || email?.dirty)) {
+        <div class="invalid-feedback">
+          @if (email?.errors?.['required']) { <div>Email é obrigatório</div> }
+          @if (email?.errors?.['email'])    { <div>Email inválido</div> }
+        </div>
+      }
     </div>
-  </div>
 
-  <div class="form-group">
-    <label for="idade">Idade</label>
-    <input
-      type="number"
-      id="idade"
-      formControlName="idade"
-      class="form-control"
-      [class.is-invalid]="idade?.invalid && idade?.touched"
-      placeholder="Digite a idade"
-      min="1"
-      max="120"
-    >
-    <div *ngIf="idade?.invalid && idade?.touched" class="invalid-feedback">
-      <div *ngIf="idade?.errors?.['required']">Idade é obrigatória</div>
-      <div *ngIf="idade?.errors?.['min'] || idade?.errors?.['max']">Idade deve ser entre 1 e 120 anos</div>
+    <!-- Idade -->
+    <div class="form-group">
+      <label for="idade">Idade</label>
+      <input
+        type="number"
+        id="idade"
+        formControlName="idade"
+        [class.is-invalid]="idade?.invalid && (idade?.touched || idade?.dirty)"
+        placeholder="Digite a idade"
+        min="1" max="120" inputmode="numeric"
+      />
+      @if (idade?.invalid && (idade?.touched || idade?.dirty)) {
+        <div class="invalid-feedback">
+          @if (idade?.errors?.['required']) { <div>Idade é obrigatória</div> }
+          @if (idade?.errors?.['min'] || idade?.errors?.['max']) { <div>Idade deve ser entre 1 e 120 anos</div> }
+        </div>
+      }
     </div>
   </div>
 
   <div class="form-actions">
-    <button
-      type="submit"
-      class="btn btn-primary"
-      [disabled]="usuarioForm.invalid"
-    >
+    <button type="submit" class="btn primary" [disabled]="usuarioForm.invalid">
       {{ isEditMode ? 'Atualizar' : 'Criar' }} Usuário
     </button>
-
-    <button
-      type="button"
-      class="btn btn-secondary"
-      (click)="onCancel()"
-    >
-      Cancelar
-    </button>
+    <button type="button" class="btn ghost" (click)="onCancel()">Cancelar</button>
   </div>
 </form>

@@ -1,148 +1,40 @@
-// ============================================================================
-// 1. Import de variáveis (sempre no topo)
-// ============================================================================
-@use '../../../../../styles/variables' as vars;
-
-// ============================================================================
-// 2. Container do formulário e animação
-// ============================================================================
-.usuario-form {
-  background: vars.$color-surface;
-  border-radius: vars.$border-radius;
-  box-shadow: vars.$shadow;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  animation: fadeIn 0.3s ease;
-
-  // ========================================================================
-  // 2.1 Cabeçalho
-  // ========================================================================
-  .form-header {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid vars.$color-border;
-
-    h2 {
-      margin: 0;
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: vars.$color-primary;
-    }
-  }
-
-  // ========================================================================
-  // 2.2 Campos do form
-  // ========================================================================
-  form {
-    display: grid;
-    gap: 1.5rem;
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-
-      label {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-        font-weight: 500;
-        color: vars.$color-text;
-      }
-
-      .req {
-        color: vars.$color-danger;
-        font-size: 0.875rem;
-      }
-
-      input {
-        padding: 0.75rem;
-        border: 1px solid vars.$color-border;
-        border-radius: vars.$border-radius;
-        font-size: 1rem;
-        background: #fff;
-        transition: all 0.2s ease;
-
-        &:focus {
-          outline: none;
-          border-color: vars.$color-primary;
-          box-shadow: 0 0 0 3px rgba(vars.$color-primary, 0.1);
-        }
-
-        &.error {
-          border-color: vars.$color-danger;
-          box-shadow: 0 0 0 3px rgba(vars.$color-danger, 0.1);
-        }
-
-        &[type="number"] {
-          -moz-appearance: textfield;
-
-          &::-webkit-outer-spin-button,
-          &::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-          }
-        }
-      }
-
-      .error-message {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-        margin-top: 0.25rem;
-        font-size: 0.875rem;
-        color: vars.$color-danger;
-      }
-    }
-  }
-
-  // ========================================================================
-  // 2.3 Ações do formulário
-  // ========================================================================
-  .form-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    padding-top: 1rem;
-    border-top: 1px solid vars.$color-border;
-    margin-top: 1rem;
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-    }
-  }
+.usuario-form { display: grid; gap: 16px; }
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 16px;
 }
+.form-group { display: grid; gap: 6px; }
+label { font-size: 13px; color: #475569; font-weight: 600; }
 
-// ============================================================================
-// 3. Estado de loading do formulário
-// ============================================================================
-.form-loading {
-  position: relative;
-  pointer-events: none;
-  opacity: 0.7;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(255, 255, 255, 0.7);
-    border-radius: vars.$border-radius;
-    z-index: 10;
-  }
+input {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  padding: 10px 12px;
+  border-radius: 10px;
+  outline: none;
+  transition: border .15s ease, box-shadow .15s ease;
 }
+input::placeholder { color: #94a3b8; opacity: 1; }
+input:focus { border-color: #2563eb; box-shadow: 0 0 0 4px rgba(37,99,235,.18); }
+input.is-invalid { border-color: #e11d48; box-shadow: 0 0 0 4px rgba(225,29,72,.18); }
 
-// ============================================================================
-// 4. Keyframe para fadeIn
-// ============================================================================
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.invalid-feedback { color: #e11d48; font-size: 12px; display: grid; gap: 2px; }
+
+.form-actions {
+  display: flex; gap: 10px; justify-content: flex-start; padding-top: 4px;
+}
+.btn {
+  appearance: none; border: 0; outline: 0; cursor: pointer;
+  padding: 10px 14px; border-radius: 10px; font-weight: 800;
+}
+.btn.primary { color: #fff; background: linear-gradient(135deg, #2563eb, #60a5fa); box-shadow: 0 10px 22px rgba(37,99,235,.18); }
+.btn.primary:disabled { opacity: .6; cursor: not-allowed; box-shadow: none; }
+.btn.ghost { color: #0f172a; background: #eef2ff; border: 1px solid #c7d2fe; }
+.btn.ghost:hover { background: #e0e7ff; }
+
+@media (max-width: 820px) {
+  .form-grid { grid-template-columns: 1fr; }
 }
